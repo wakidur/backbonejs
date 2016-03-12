@@ -1,0 +1,102 @@
+<html>
+<head>
+	<title>Off the backbone</title>
+
+	<script type="text/javascript" src="js/libs/jquery-1.11.3.js"></script>
+	<script type="text/javascript" src="js/libs/underscore.js"></script>
+	<script type="text/javascript" src="js/libs/backbone.js"></script>
+	<script type="text/javascript" src="js/lib/bootstrap.min.js"></script>
+	<script type="text/javascript" src="js/libs/handlebars-v4.0.5.js"></script>
+
+<!--
+	<script type="text/javascript" src="js/models/menuitem.js"></script>
+	<script type="text/javascript" src="js/collections/menuitems.js"></script>
+	<script type="text/javascript" src="js/views/menu.js"></script>
+	<script type="text/javascript" src="js/views/menuitemdetails.js"></script>
+	<script type="text/javascript" src="js/router/app.js"></script>
+-->
+
+	<link rel="stylesheet" type="text/css" href="css/bootstrap.min.css" />
+	<link rel="stylesheet" type="text/css" href="css/bootstrap-responsive.min.css" />
+</head>
+<body>
+
+	<div class="container">
+		<h1>Off the backbone</h1>
+      <ul class="nav nav-pills">
+			<li><a href="#">Food</a></li>
+			<li><a href="#/menu-items/new">Add Item</a></li>
+			<li><a href="#/menu-items/garden-salad">Garden Salad</a></li>
+		</ul>
+	</div>
+
+	<div class="container" id="app">
+
+	</div>
+   <script>
+    
+//     model
+       var moldeItem = Backbone.Model.extend({
+           defaults: {
+               category : "Entrees",
+               imagepath: 'no-image.jpg',
+               name : ''
+           }
+       });
+       
+       
+//     collction
+       var collectItem = Backbone.Collection.extend({
+           comparator : 'name',
+           model : moldeItem,
+           url : 'data/menu-items.json'
+       });
+       
+//     view
+       var viewItme = Backbone.View.extend({
+          template: Handlebars.compile(
+            '<ul>' + 
+		  '{{#each models}} <li> {{attributes.name}} {{attributes.category}} </li> {{/each}}' +
+		'</ul>'
+           ),
+           initialize: function  () {
+		      this.listenTo( this.collection, "reset", this.render );
+	       },
+	
+	       render: function () {
+		      this.$el.html( this.template(this.collection) );
+                console.log(this.collection);
+		      return this;
+	       }
+
+       });
+       
+       
+
+       
+//     router
+    var AppRouter = Backbone.Router.extend({
+           routes: {
+              "": "list",
+           },
+       initialize: function  () {
+		this.menuItems = new collectItem();
+		this.menuItems.fetch();
+        this.menuView = new viewItme({collection: this.menuItems});
+	   },
+
+	list: function () {
+		$('#app').html(this.menuView.render().el);
+	}
+
+
+});
+
+var app = new AppRouter();
+
+$(function() {
+	Backbone.history.start();
+});
+    </script>
+</body>
+</html>

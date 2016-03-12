@@ -1,0 +1,18 @@
+
+  "people": [
+    {
+      "firstName": "Jane",
+      "lastName": "Doe",
+      "age": "32",
+      "photo": "test_photo",
+      "video": "test_video"
+    },
+    {
+      "firstName": "James",
+      "lastName": "Hamm",
+      "age": "56",
+      "photo": "test_photo",
+      "video": "test_video"
+    },
+	  
+	  ]
